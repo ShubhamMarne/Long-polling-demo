@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat Application</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        button {
+            background-color: green;
+        }
+        .container {
+            display: block;
+            margin: auto;
+            width: 20%;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <input type="text" id="input" placeholder="Type message..." />
+        <button onclick="send(document.getElementById('input').value)">Send</button>
+    </div>
+    <div id="messages"></div>
+    <script>
+      function poll() {
+        fetch("/poll")
+          .then((res) => res.text())
+          .then((message) => (document.getElementById("messages").innerHTML += `${message} <br>`))
+          .finally(() => poll());
+      }
+      function send(message) {
+        fetch("/message", {
+          method: "POST",
+          body: message,
+        });
+      }
+      poll();
+    </script>
+  </body>
+</html>
